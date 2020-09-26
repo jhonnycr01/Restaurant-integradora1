@@ -6,9 +6,9 @@ public class Client {
 	private String idType;
 	private String name;
 	private String adress;
-	private double phone;
+	private String phone;
 	
-	public Client(String id, String idType, String name, String adress, double phone) {
+	public Client(String id, String idType, String name, String adress, String phone) {
 		this.id = id;
 		this.idType = idType;
 		this.name = name;
@@ -48,14 +48,11 @@ public class Client {
 		this.adress = adress;
 	}
 
-	public double getPhone() {
+	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(double phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
-
 }
-	

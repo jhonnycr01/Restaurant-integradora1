@@ -56,7 +56,4 @@ public class Product {
 	public void setNit(String nit) {
 		this.nit = nit;
 	}
-	
-	
 }
-

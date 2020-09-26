@@ -1,5 +1,7 @@
 package ui;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import model.*;
 
@@ -14,6 +16,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		Scanner sc = new Scanner(System.in);
 		int menu=-1;
+		
 		String name;
 		String nit;
 		String administratorName;
@@ -21,6 +24,9 @@ public class Main {
 		Order orders;
 		Product product;
 		
+		LocalDateTime date = LocalDateTime.now();
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");  
+        String formatDateTime = date.format(format); 
 		
 		while(menu != 0) {
 			cleanScreen();
@@ -60,7 +66,7 @@ public class Main {
 		switch(menu) {
 		
 		case 1:
-			addRestaurant (name, nit, administratorName, products, clients, orders);
+			
 			break;
 		}
 	}

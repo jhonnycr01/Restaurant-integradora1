@@ -1,21 +1,20 @@
 package model;
 
 import java.util.ArrayList;
-import java.time.LocalDateTime;
 
 public class Order {
 
 	private String orderCode;
-	private LocalDateTime date;
+	private String date;
 	private String clientCode;
 	private String resturantNit;
 	private String orderState;
 	private ArrayList <String> productList;
 	
-	public Order(String orderCode, String clientCode, String resturantNit,
+	public Order(String orderCode, String date, String clientCode, String resturantNit,
 			ArrayList<String> productList) {
 		this.orderCode = orderCode;
-		this.date = LocalDateTime.now();
+		this.date = date;
 		this.clientCode = clientCode;
 		this.resturantNit = resturantNit;
 		this.productList = productList;
@@ -28,12 +27,12 @@ public class Order {
 	public void setOrderCode(String orderCode) {
 		this.orderCode = orderCode;
 	}
-
-	public LocalDateTime getDate() {
+	
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDateTime date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -55,6 +54,10 @@ public class Order {
 
 	public ArrayList<String> getProductList() {
 		return productList;
+	}
+	
+	public void addProductToList(String product) {
+		productList.add(product);
 	}
 
 	public void setProductList(ArrayList<String> productList) {
