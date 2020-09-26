@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class SystemManage {
@@ -30,12 +28,34 @@ public class SystemManage {
 	
 	public SystemManage(String id) {
 		this.id=id;
-		this.restaurants =  new ArrayList<>();
-		this.products = new ArrayList<>();
-		this.clients = new ArrayList<>();
-		this.orders = new ArrayList<>();
-		deserializeRestaurants();
-		//deserializeRestaurants();
+		File rest = new File(PATH_RESTAURANTS);
+		if(rest.exists()) {
+			deserializeRestaurants();
+		}
+		else {
+			this.restaurants =  new ArrayList<>();	
+		}
+		File prod = new File(PATH_PRODUCTS);
+		if(prod.exists()) {
+			deserializeProducts();
+		}
+		else {
+			this.products = new ArrayList<>();	
+		}
+		File cli = new File(PATH_CLIENTS);
+		if(cli.exists()) {
+			deserializeClients();
+		}
+		else {
+			this.clients = new ArrayList<>();	
+		}
+		File ord = new File(PATH_ORDERS);
+		if(ord.exists()) {
+			deserializaOrders();
+		}
+		else {
+			this.orders = new ArrayList<>();	
+		}
 	}
 	
 	public ArrayList<Restaurant> getRestaurants() {
@@ -123,7 +143,7 @@ public class SystemManage {
 		 
 	}
 	
-	public void updateOrder(String orderCode, LocalDateTime date, String clientCode, String resturantNit) {
+	public void updateOrder(String orderCode, String date, String clientCode, String resturantNit) {
 		Order o = null;
 		for (int i = 0; i < orders.size(); i++) {
 			if(orderCode==orders.get(i).getOrderCode()) {
@@ -281,38 +301,34 @@ public class SystemManage {
 	}
 		
 	
-	public String generateOrderReport() {
-		String msg = "";
+	public String generateOrderReport(String s) {
+		String msg = "OrderCode" + s + "Date" + s + "ClientCode" + s
+					 + "RestaurantNIT" + s + "OrderState";
 		for (int i = 0; i < orders.size(); i++) {
-			msg += orders.get(i).getOrderCode() + "," +  orders.get(i).getDate() + "," + 
-					"," + orders.get(i).getClientCode() + "," + orders.get(i).getResturantNit() + 
-					"," + orders.get(i).getOrderState();
-			for(int j = 0;j<orders.get(i).getProductList().size(); j++) {
-				String product = orders.get(i).getProductList().get(j);
-				String[] info = product.split(" ");
-				msg += info[0] + "," + info[1] + "\n";
-			}
+			msg += orders.get(i).getOrderCode() + s +  orders.get(i).getDate() + s + 
+					s + orders.get(i).getClientCode() + s + orders.get(i).getResturantNit() + 
+					s + orders.get(i).getOrderState() + "\n";
 		}
 		return msg;
 	}
 	
-	public void saveOrders() throws FileNotFoundException {
+	public void saveOrders(String s) throws FileNotFoundException {
 		File fileOrders = new File(PATH_ORDERS);
 		PrintWriter pw = new PrintWriter(fileOrders);
 
-		String repStr = generateOrderReport();
+		String repStr = generateOrderReport(s);
 		pw.print(repStr);
 		pw.close();
 	}
 	
-	public void loadOrders() throws FileNotFoundException{
+	public void loadOrders(String s) throws FileNotFoundException{
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(PATH_ORDERS)));
 			String line = br.readLine();
 
 			while(line!=null) {	
 				
-				String[] info = line.split(",");
+				String[] info = line.split(s);
 				
 				String ordercode = info[0]; 
 				String date = info[1];
@@ -320,45 +336,45 @@ public class SystemManage {
 				String restaurantnit = info[3];
 				String orderstate = info[4];
 				
-				Order order = new Order(ordercode,date,clientcode,restaurantnit, orderstate);
-				//addOrder(order);
+				Order order = new Order(ordercode, date, clientcode, restaurantnit, orderstate, null);
+				addOrder(order);
 				
 				line = br.readLine();
 			}
+			br.close();
 			
 		}catch(Exception e){
 			
 		}
 	}
 	
-	public String generateReportProducts() {
-		String msg = "";
+	public String generateReportProducts(String s) {
+		String msg = "Code" + s + "Name" + s + "Decription" + s + "Cost" + s + "Nit";
 		for (int i = 0; i < products.size(); i++) {
-			// tring orderCode, Date date, Date time, String clientCode, String resturantNit
-			msg += products.get(i).getCode() + "," +  products.get(i).getName() + "," + 
-					"," + products.get(i).getDescription() + "," + products.get(i).getCost() + 
-					"," + products.get(i).getNit() + "\n";
+			msg += products.get(i).getCode() + s +  products.get(i).getName() + s + 
+					s + products.get(i).getDescription() + s + products.get(i).getCost() + 
+					s + products.get(i).getNit() + "\n";
 		}
 		return msg;
 	}
 	
-	public void saveProducts() throws FileNotFoundException {
+	public void saveProducts(String s) throws FileNotFoundException {
 		File fileProducts = new File(PATH_PRODUCTS);
 		PrintWriter pw = new PrintWriter(fileProducts);
 
-		String repStr = generateReportProducts();
+		String repStr = generateReportProducts(s);
 		pw.print(repStr);
 		pw.close();
 	}
 	
-	public void loadProducts() {
+	public void loadProducts(String s) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(PATH_PRODUCTS)));
 			String line = br.readLine();
 
 			while(line!=null) {	
 				
-				String info[] = line.split(",");
+				String info[] = line.split(s);
 				String code = info[0];
 				String name = info[1];
 				String description = info[2];
@@ -370,16 +386,17 @@ public class SystemManage {
 				
 				line = br.readLine();
 			}
+			br.close();
 			
 		}catch(Exception e){
 			
 		}
 	}
 	
-	public String generateReportClients() {
+	public String generateReportClients(String s) {
 		String msg = "";
 		for (int i = 0; i < clients.size(); i++) {
-			// tring orderCode, Date date, Date time, String clientCode, String resturantNit
+			
 			msg += clients.get(i).getId() + "," +  clients.get(i).getIdType() + "," + 
 					"," + clients.get(i).getName() + "," + clients.get(i).getAdress() + 
 					"," + clients.get(i).getPhone() + "\n";
@@ -387,11 +404,11 @@ public class SystemManage {
 		return msg;
 	}
 	
-	public void saveClients() throws FileNotFoundException {
+	public void saveClients(String s) throws FileNotFoundException {
 		File fileClients = new File(PATH_CLIENTS);
 		PrintWriter pw = new PrintWriter(fileClients);
 		
-		String repStr = generateReportProducts();
+		String repStr = generateReportClients(s);
 		pw.print(repStr);
 		pw.close();
 	}
@@ -414,39 +431,40 @@ public class SystemManage {
 				addClient(client);
 				line = br.readLine();
 			}
+			br.close();
 			
 		}catch(Exception e){
 			
 		}
 	}
 	
-	public String generateReportRestaurants() {
-		String msg = "";
+	public String generateReportRestaurants(String s) {
+		String msg = "Nit" + s + "Name" + s + "AdministratorName";
 		for (int i = 0; i < restaurants.size(); i++) {
-			// tring orderCode, Date date, Date time, String clientCode, String resturantNit
-			msg += restaurants.get(i).getNit() + "," +  restaurants.get(i).getAdministratorName() + "," + 
+			
+			msg += restaurants.get(i).getNit() + "," +  restaurants.get(i).getName() + "," + 
 					"," + restaurants.get(i).getAdministratorName() + "\n";
 		}
 		return msg;
 	}
 	
-	public void saveRestaurants() throws FileNotFoundException {
+	public void saveRestaurants(String s) throws FileNotFoundException {
 		File fileRestaurants = new File(PATH_RESTAURANTS);
 		PrintWriter pw = new PrintWriter(fileRestaurants);
 		
-		String repStr = generateReportRestaurants();
+		String repStr = generateReportRestaurants(s);
 		pw.print(repStr);
 		pw.close();
 	}
 	
-	public void loadRestaurants() {
+	public void loadRestaurants(String s) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(PATH_RESTAURANTS)));
 			String line = br.readLine();
 
 			while(line!=null) {	
 				
-				String[] info = line.split(",");
+				String[] info = line.split(s);
 				
 				String name = info[0];
 				String nit = info[1];
@@ -457,9 +475,40 @@ public class SystemManage {
 				
 				line = br.readLine();
 			}
+			br.close();
 			
 		}catch(Exception e){
 			
+		}
+	}
+
+	
+	
+	public void sortNamesByBubble() {
+		for(int i=0; i< restaurants.size()-1;i++) {
+			for(int j=0;j<restaurants.size()-i-1;j++) {
+				if(restaurants.get(j).compareTo(restaurants.get(j+1))== 1) {
+					Restaurant aux = restaurants.get(j);
+					restaurants.set(j, restaurants.get(j+1));
+					restaurants.set(j+1,aux);
+				}
+			}
+		}
+	}
+	
+	public void sortCostBySelection() {
+		for(int i=0;i<products.size();i++){
+			int min = i;
+			for(int j= i+1;i<products.size();j++) {
+				Product minvalue = products.get(min);
+				Product current = products.get(j);
+				if(current.getCost() < minvalue.getCost()) {
+					min = j;
+				}
+				Product aux = products.get(min);
+				products.set(min, products.get(min));
+				products.set(i, aux);
+			}
 		}
 	}
 }

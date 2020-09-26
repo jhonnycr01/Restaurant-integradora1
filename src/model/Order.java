@@ -11,8 +11,8 @@ public class Order {
 	private String orderState;
 	private ArrayList <String> productList;
 	
-	public Order(String orderCode, String date, String clientCode, String resturantNit,
-			ArrayList<String> productList) {
+	public Order(String orderCode, String date, String clientCode, String resturantNit, 
+			String orderState, ArrayList<String> productList) {
 		this.orderCode = orderCode;
 		this.date = date;
 		this.clientCode = clientCode;

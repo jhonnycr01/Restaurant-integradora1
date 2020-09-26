@@ -9,7 +9,6 @@ public class Product {
 	private String nit;
 	
 	public Product(String code, String name, String description, double cost, String nit) {
-		super();
 		this.code = code;
 		this.name = name;
 		this.description = description;

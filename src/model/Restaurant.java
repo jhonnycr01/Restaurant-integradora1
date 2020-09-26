@@ -1,6 +1,6 @@
 package model;
 
-public class Restaurant {
+public class Restaurant implements Comparable<Restaurant> {
 
 	private String name; 
 	private String nit;
@@ -34,5 +34,23 @@ public class Restaurant {
 
 	public void setAdministratorName(String administratorName) {
 		this.administratorName = administratorName;
+	}
+
+	@Override
+	public int compareTo(Restaurant restaurant) {
+		
+		int comparation=0;
+	
+		if(this.getName().compareTo(restaurant.getName()) == -1) {
+			comparation = - 1;
+		}
+		else if (this.getName().compareTo(restaurant.getName()) == 0) {
+			comparation = 0;
+		}
+		else if(this.getName().compareTo(restaurant.getName()) == 1) {
+			comparation = 1;
+		}
+
+		return comparation;
 	}
 }
