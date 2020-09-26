@@ -89,6 +89,16 @@ public class Restaurant {
 		
 	}
 	
+	public boolean validateProduct(Product product) {
+		boolean answer=false;
+		for(int i=0; i<products.size(); i++) {
+			if(products.get(i)==product) {
+				answer=true;
+			}
+		}
+		return answer;
+	}
+	
 	public void updateProduct(String id, String name, String description, double cost, String nit) {
 		Product p = null;
 		for (int i = 0; i < products.size(); i++) {
@@ -248,6 +258,8 @@ public class Restaurant {
 
 		pw.close();
 	}
+	
+	
 	
 	
 }

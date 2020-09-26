@@ -37,11 +37,12 @@ public class SystemManage {
 		for (int i = 0; i < restaurants.size(); i++) {
 			if(nit==restaurants.get(i).getNit()) {
 				r = restaurants.get(i);
+				r.setAdministratorName(administratorName);
+				r.setName(administratorName);
 				break;
 			}
 		}
-		r.setAdministratorName(administratorName);
-		r.setName(administratorName);
+		
 	
 	}
 	
