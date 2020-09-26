@@ -1,12 +1,6 @@
 package model;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -88,6 +82,7 @@ public class Restaurant {
 		
 		
 	}
+	
 	
 	public boolean validateProduct(Product product) {
 		boolean answer=false;
@@ -249,7 +244,7 @@ public class Restaurant {
 	
 	//lo imprimo en un txt --> el csv
 	public void orderReport() throws FileNotFoundException {
-		File fileProducts = new File("files/reportClubs" +this.nit);
+		File fileProducts = new File("files/reportOrders" + this.nit );
 		String path = "files/reportClubs"+this.nit;
 		PrintWriter pw = new PrintWriter(new File(path));
 
@@ -259,6 +254,30 @@ public class Restaurant {
 		pw.close();
 	}
 	
+	public void productRepor(String direccion) throws FileNotFoundException{
+		File fileProducts; 
+		FileWriter w;
+		BufferedWriter b;
+		PrintWriter wr;
+		try {
+			
+		fileProducts= new File(direccion);
+		w= new FileWriter(fileProducts);
+		b= new BufferedWriter(w);
+		wr= new PrintWriter(b);
+		
+		wr.write("Producto solicitado,nombre de restaurante,nit restaurante,nombre de cliente,id del cliente,direccion cliente,telefono cliente\n");
+		for(int i=0; i<products.size(); i++) {
+			
+		}
+		
+		
+		}catch(Exception e){
+			
+		}
+		
+		
+	}
 	
 	
 	

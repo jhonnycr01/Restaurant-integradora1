@@ -1,8 +1,8 @@
 package ui;
 
-import org.graalvm.compiler.virtual.phases.ea.PartialEscapeBlockState.Final;
+import java.util.Scanner;
+import model.*;
 
-import com.sun.java.swing.plaf.windows.WindowsRootPaneUI;
 
 import model.Client;
 import model.Order;
@@ -12,8 +12,15 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		BufferedReader br= new BufferedReader(new FileReader(""))
+		Scanner sc = new Scanner(System.in);
 		int menu=-1;
+		String name;
+		String nit;
+		String administratorName;
+		Client clients;
+		Order orders;
+		Product product;
+		
 		
 		while(menu != 0) {
 			cleanScreen();
@@ -31,7 +38,7 @@ public class Main {
 			System.out.println("please enter then option you would like to use");
 			menu = sc.nextInt();
 			if(menu !=0) {
-				selectOption(menu);
+				selectionOption(menu);
 			}
 		}
 		sc.close();
@@ -53,10 +60,12 @@ public class Main {
 		switch(menu) {
 		
 		case 1:
-			addRestaurant(String name, String nit, String administratorName, Product products, Client clients, Order orders);
+			addRestaurant (name, nit, administratorName, products, clients, orders);
 			break;
 		}
 	}
-
-	register 
+	
+	public void registerRestaurant() {
+		System.out.println("please enter the name of the restaurant");
+	}
 }
