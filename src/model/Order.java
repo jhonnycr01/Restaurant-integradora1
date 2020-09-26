@@ -10,6 +10,7 @@ public class Order {
 	private Date time;
 	private String clientCode;
 	private String resturantNit;
+	private String orderState;
 	private ArrayList <String> productList;
 	
 	public Order(String orderCode, Date date, Date time, String clientCode, String resturantNit,
@@ -68,6 +69,14 @@ public class Order {
 
 	public void setProductList(ArrayList<String> productList) {
 		this.productList = productList;
+	}
+
+	public String getOrderState() {
+		return orderState;
+	}
+
+	public void setOrderState(String orderState) {
+		this.orderState = orderState;
 	}
 	
 	

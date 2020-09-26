@@ -1,6 +1,8 @@
 package model;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,7 +27,7 @@ public class Restaurant {
 		this.products = new ArrayList<>();
 		this.clients = new ArrayList<>();
 		this.orders = new ArrayList<>();
-		deserialize();
+		deserializeRestaurants();
 
 	}
 	
@@ -133,6 +135,33 @@ public class Restaurant {
 		o.setResturantNit(resturantNit);
 	}
 	
+	public void updateOrderState(String code) {
+		Order or=null;
+		or = searchOrderByCode(code);
+		
+		if(or.getOrderState().equalsIgnoreCase("request")) {
+			or.setOrderState("in progress");
+		}
+		else if(or.getOrderState().equalsIgnoreCase("in progress")) {
+			or.setOrderState("sent");
+		}
+		else if(or.getOrderState().equalsIgnoreCase("sent")) {
+			or.setOrderState("delivered");
+		}
+	}
+		
+	
+	public Order searchOrderByCode(String code) {
+		Order or=null;
+		
+		for (int i = 0; i < orders.size(); i++) {
+			if(code.equalsIgnoreCase(orders.get(i).getOrderCode())) {
+				or = orders.get(i);
+				break;
+			}
+		}
+			return or;
+	}
 //	private ArrayList <Product> products;
 //	private ArrayList <Client> clients;
 //	private ArrayList <Order> orders;
@@ -157,34 +186,39 @@ public class Restaurant {
 			//esto se puede borrar, si funciona debera imprimirse
 			System.out.println("the system saved the data from the restaurant : " + name);
 			System.out.println();
-			fichero.close();
+			ficheroCli.close();
+			ficheroOrd.close();
+			ficheroPro.close();
 
 		} catch (Exception e1) {
 			System.out.println("no se pudo serializar");
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void deserializeRestaurants() {
 
 		System.out.println("loading data ....");
 		try {
 			File fileProducts = new File("serializedProducts/" +this.nit);
-			ObjectInputStream ficheroPro = new ObjectOutputStream(new FileOutputStream(fileProducts));
+			ObjectInputStream ficheroPro = new ObjectInputStream(new FileInputStream(fileProducts));
 			products = (ArrayList<Product>) ficheroPro.readObject();
 			
 			//clients
 			File fileClients = new File("serializedClients/" +this.nit);
-			ObjectInputStream ficheroCli = new ObjectOutputStream(new FileOutputStream(fileClients));
+			ObjectInputStream ficheroCli = new ObjectInputStream(new FileInputStream(fileClients));
 			clients = (ArrayList<Client>) ficheroCli.readObject();
 			
 			//orders
 			File fileOrders = new File("serializedOrders/" +this.nit);
-			ObjectInputStream ficheroOrd = new ObjectOutputStream(new FileOutputStream(fileOrders));
+			ObjectInputStream ficheroOrd = new ObjectInputStream(new FileInputStream(fileOrders));
 			orders = (ArrayList<Order>) ficheroOrd.readObject();
 			
 			
 
-			fichero_recuperado.close();
+			ficheroCli.close();
+			ficheroPro.close();
+			ficheroOrd.close();
 		} catch (Exception e) {
 			System.out.println("No se pudo deserializar");
 		}
@@ -204,7 +238,7 @@ public class Restaurant {
 	}
 	
 	//lo imprimo en un txt --> el csv
-	public void orderReport() {
+	public void orderReport() throws FileNotFoundException {
 		File fileProducts = new File("files/reportClubs" +this.nit);
 		String path = "files/reportClubs"+this.nit;
 		PrintWriter pw = new PrintWriter(new File(path));
@@ -214,6 +248,8 @@ public class Restaurant {
 
 		pw.close();
 	}
+	
+	
 }
 
 
