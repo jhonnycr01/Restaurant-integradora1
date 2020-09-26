@@ -12,6 +12,10 @@ public class Restaurant {
 	private ArrayList <Product> products;
 	private ArrayList <Client> clients;
 	private ArrayList <Order> orders;
+	
+	public final static String PATH_PRODUCTS = "files/products.csv";
+	public final static String PATH_CLIENTS = "files/clients.csv";
+	public final static String PATH_ORDERS = "files/orders.csv";
 
 	
 	public Restaurant(String name, String nit, String administratorName, Product products, Client clients, Order orders) {
@@ -36,8 +40,6 @@ public class Restaurant {
 	public ArrayList <Order> getOrders(){
 		return orders;
 	}
-	
-	
 	
 	public String getName() {
 		return name;
@@ -219,8 +221,6 @@ public class Restaurant {
 			ObjectInputStream ficheroOrd = new ObjectInputStream(new FileInputStream(fileOrders));
 			orders = (ArrayList<Order>) ficheroOrd.readObject();
 			
-			
-
 			ficheroCli.close();
 			ficheroPro.close();
 			ficheroOrd.close();
@@ -231,56 +231,109 @@ public class Restaurant {
 	}
 	
 	//creo el reporte de pedidos
-	public String printing() {
+	public String generateOrderReport() {
 		String msg = "";
-
 		for (int i = 0; i < orders.size(); i++) {
-
 			// tring orderCode, Date date, Date time, String clientCode, String resturantNit
-			msg += orders.get(i).getOrderCode() + "_" +  "\n";
+			msg += orders.get(i).getOrderCode() + "," +  orders.get(i).getDate() + "," + 
+					"," + orders.get(i).getClientCode() + "," + orders.get(i).getResturantNit() + 
+					"," + orders.get(i).getOrderState()+ "\n";
 		}
 		return msg;
 	}
 	
 	//lo imprimo en un txt --> el csv
-	public void orderReport() throws FileNotFoundException {
-		File fileProducts = new File("files/reportOrders" + this.nit );
-		String path = "files/reportClubs"+this.nit;
-		PrintWriter pw = new PrintWriter(new File(path));
+	public void saveOrders() throws FileNotFoundException {
+		File fileProducts = new File(PATH_ORDERS);
+		PrintWriter pw = new PrintWriter(fileProducts);
 
-		String repStr = printing();
+		String repStr = generateOrderReport();
 		pw.print(repStr);
-
 		pw.close();
 	}
 	
-	public void productRepor(String direccion) throws FileNotFoundException{
-		File fileProducts; 
-		FileWriter w;
-		BufferedWriter b;
-		PrintWriter wr;
+	public void loadOrders() throws FileNotFoundException{
 		try {
+			BufferedReader br = new BufferedReader(new FileReader(new File(PATH)));
+			String line = br.readLine();
+
+			while(line!=null) {	
+				
+				String[] info = line.split(",");
+				
+				String ordercode = info[0]; 
+				//LocalDateTime date = LocalDateTime.
+				String clientcode = info[2];
+				String restaurantnit = info[3];
+				String orderstate = info[4];
+				
+				//Order order = new Order(ordercode,date,clientcode,restaurantnit, orderstate);
+				//orders.add(order);
+				
+				line = br.readLine();
+			}
 			
-		fileProducts= new File(direccion);
-		w= new FileWriter(fileProducts);
-		b= new BufferedWriter(w);
-		wr= new PrintWriter(b);
-		
-		wr.write("Producto solicitado,nombre de restaurante,nit restaurante,nombre de cliente,id del cliente,direccion cliente,telefono cliente\n");
-		for(int i=0; i<products.size(); i++) {
-			
-		}
-		
-		
 		}catch(Exception e){
 			
 		}
-		
+	}
+	
+	public String generateReportProducts() {
+		String msg = "";
+		for (int i = 0; i < products.size(); i++) {
+			// tring orderCode, Date date, Date time, String clientCode, String resturantNit
+			msg += products.get(i).getCode() + "," +  products.get(i).getName() + "," + 
+					"," + products.get(i).getDescription() + "," + products.get(i).getCost() + 
+					"," + products.get(i).getNit() + "\n";
+		}
+		return msg;
+	}
+	
+	public void saveProducts() throws FileNotFoundException {
+		File fileProducts = new File(PATH_PRODUCTS);
+		PrintWriter pw = new PrintWriter(fileProducts);
+
+		String repStr = generateReportProducts();
+		pw.print(repStr);
+		pw.close();
+	}
+	
+	public void loadProducts() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(new File(PATH_PRODUCTS)));
+			String line = br.readLine();
+
+			while(line!=null) {	
+				
+				String info[] = line.split(",");
+				String code = info[0];
+				String name = info[1];
+				String description = info[2];
+				double cost = Double.parseDouble(info[3]);
+				String nit = info[4];
+				
+				Product product = new Product(code,name,description,cost,nit);
+				products.add(product);
+				
+				line = br.readLine();
+			}
+			
+		}catch(Exception e){
+			
+		}
+	}
+	
+	public String generateReportClients() {
 		
 	}
 	
+	public void saveClients() {
+		
+	}
 	
-	
+	public void loadClients() {
+		
+	}
 }
 
 

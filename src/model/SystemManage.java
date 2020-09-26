@@ -62,6 +62,7 @@ public class SystemManage {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void deserializeRestaurants() {
 
 		System.out.println("loading data ....");
